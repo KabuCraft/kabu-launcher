@@ -12,7 +12,7 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { HomeModule } from './home/home.module';
-import { DetailModule } from './detail/detail.module';
+import { SetupModule } from './setup/setup.module';
 
 import { AppComponent } from './app.component';
 
@@ -28,7 +28,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new Transl
     CoreModule,
     SharedModule,
     HomeModule,
-    DetailModule,
+    SetupModule,
     AppRoutingModule,
     TranslateModule.forRoot({
       loader: {

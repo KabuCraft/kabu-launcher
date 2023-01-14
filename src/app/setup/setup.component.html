@@ -1,0 +1,17 @@
+<div class="w100 h100 is-flex is-justify-content-center is-align-items-center">
+	<div
+		class="is-flex is-flex-direction-column is-justify-content-center is-align-items-center"
+	>
+		<h1 class="title is-4">Setup</h1>
+
+		<div class="pb-2">
+			{{ currentStep.label }}
+			({{ currentStepIndex + 1 }} / {{ steps.length }})
+		</div>
+		<progress
+			class="progress is-small is-primary"
+			style="width: 15rem"
+			max="100"
+		></progress>
+	</div>
+</div>
