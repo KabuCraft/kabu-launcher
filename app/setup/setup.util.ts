@@ -67,7 +67,7 @@ export const downloadFile = (
 					downloaded += chunk.length;
 					const percentage = (downloaded / totalSize) * 100;
 
-					if (event) {
+					if (event && !event.sender.isDestroyed()) {
 						event.sender.send('download-progress', percentage);
 					}
 				});
