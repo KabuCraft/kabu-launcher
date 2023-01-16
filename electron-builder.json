@@ -3,7 +3,7 @@
 	"directories": {
 		"output": "release/"
 	},
-  "artifactName": "KabuLauncher",
+	"artifactName": "KabuLauncher",
 	"files": [
 		"**/*",
 		"!**/*.ts",

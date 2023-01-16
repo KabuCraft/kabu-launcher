@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import {Router} from "@angular/router";
+import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 
 import { SetupStep, setupSteps } from '../../../app/shared';
@@ -25,7 +25,7 @@ export class SetupComponent extends BaseComponent implements OnInit {
 	constructor(
 		private electron: ElectronService,
 		private cdr: ChangeDetectorRef,
-    private router: Router
+		private router: Router,
 	) {
 		super();
 	}
@@ -53,7 +53,7 @@ export class SetupComponent extends BaseComponent implements OnInit {
 				}
 
 				if (complete) {
-          this.router.navigate(['/game']);
+					this.router.navigate(['/game']);
 					return;
 				}
 

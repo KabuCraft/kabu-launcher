@@ -36,7 +36,7 @@ export const downloadModpackStep: SetupStepConfig = {
 
 		log('Current version: ', currentVersion);
 
-    // Check the latest version
+		// Check the latest version
 		const { data } = await axios.get(`${BASE_URL}/${VERSION_FILE}`);
 		if (data.latest === currentVersion) {
 			log('Up to date');
