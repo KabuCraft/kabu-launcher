@@ -2,27 +2,27 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from './shared/components';
 
-import { HomeRoutingModule } from './home/home-routing.module';
 import { SetupRoutingModule } from './setup/setup-routing.module';
+import { GameRoutingModule } from './game/game-routing.module';
 
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'setup',
-    pathMatch: 'full'
-  },
-  {
-    path: '**',
-    component: PageNotFoundComponent
-  }
+	{
+		path: '',
+		redirectTo: 'setup',
+		pathMatch: 'full',
+	},
+	{
+		path: '**',
+		component: PageNotFoundComponent,
+	},
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
-    HomeRoutingModule,
-    SetupRoutingModule
-  ],
-  exports: [RouterModule]
+	imports: [
+		RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
+		SetupRoutingModule,
+		GameRoutingModule,
+	],
+	exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

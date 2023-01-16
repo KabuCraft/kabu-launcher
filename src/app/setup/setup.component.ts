@@ -1,13 +1,17 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { SetupStep, setupSteps } from '../../shared';
+import {Router} from "@angular/router";
+import { takeUntil } from 'rxjs';
+
+import { SetupStep, setupSteps } from '../../../app/shared';
 import { ElectronService } from '../core/services';
+import { BaseComponent } from '../shared';
 
 @Component({
 	selector: 'app-setup',
 	templateUrl: './setup.component.html',
 	styleUrls: ['./setup.component.scss'],
 })
-export class SetupComponent implements OnInit {
+export class SetupComponent extends BaseComponent implements OnInit {
 	readonly steps = setupSteps;
 
 	currentStepIndex = -1;
@@ -16,31 +20,56 @@ export class SetupComponent implements OnInit {
 		label: 'Loading',
 	};
 
+	progress?: number = undefined;
+
 	constructor(
 		private electron: ElectronService,
 		private cdr: ChangeDetectorRef,
-	) {}
+    private router: Router
+	) {
+		super();
+	}
 
 	ngOnInit() {
-		this.electron.ipcRenderer.on(
-			'setup-progress',
-			(_event, { index, error }) => {
+		this.electron
+			.on('download-progress')
+			.pipe(takeUntil(this.ngDestroyed$))
+			.subscribe(({ progress }) => {
+				if (progress === 100) {
+					progress = undefined;
+				}
+
+				this.progress = progress;
+				this.cdr.detectChanges();
+			});
+
+		this.electron
+			.on('setup-progress')
+			.pipe(takeUntil(this.ngDestroyed$))
+			.subscribe(({ index, error, complete }) => {
 				if (error) {
 					alert(error.message);
 					return;
 				}
 
+				if (complete) {
+          this.router.navigate(['/game']);
+					return;
+				}
+
+				// Reset the progress
+				this.progress = undefined;
+
+				// Update the current step
 				this.updateStep(index);
-			},
-		);
-		this.electron.ipcRenderer.send('begin-setup');
+			});
+
+		this.electron.send('begin-setup');
 	}
 
 	private updateStep(index: number) {
-		console.log(index);
 		this.currentStepIndex = index;
 		this.currentStep = setupSteps[index];
-		console.log(this.currentStep);
 		this.cdr.detectChanges();
 	}
 }

@@ -1,10 +1,16 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
+import { catchErrors } from 'electron-log';
 import * as path from 'path';
 import * as fs from 'fs';
 
 import { runSetup } from './setup/setup';
+import './launch';
 
 const init = () => {
+	catchErrors({
+		showDialog: true,
+	});
+
 	let win: BrowserWindow = null;
 	const args = process.argv.slice(1),
 		serve = args.some((val) => val === '--serve');
@@ -49,7 +55,7 @@ const init = () => {
 			win = null;
 		});
 
-    ipcMain.on('begin-setup', async (event) => runSetup(event));
+		ipcMain.on('begin-setup', (event) => runSetup(event));
 
 		return win;
 	}
@@ -84,5 +90,5 @@ const init = () => {
 };
 
 if (app) {
-  init();
+	init();
 }

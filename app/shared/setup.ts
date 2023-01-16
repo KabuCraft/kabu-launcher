@@ -20,6 +20,10 @@ export const setupSteps: SetupStep[] = [
 		key: 'download-modpack',
 		label: 'Downloading Modpack',
 	},
+	{
+		key: 'user-setup',
+		label: 'Setting up user data',
+	},
 ];
 
 export interface SetupUpdate {

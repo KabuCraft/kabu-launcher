@@ -8,10 +8,20 @@
 			{{ currentStep.label }}
 			({{ currentStepIndex + 1 }} / {{ steps.length }})
 		</div>
+
 		<progress
+			*ngIf="progress; else indeterminate"
 			class="progress is-small is-primary"
 			style="width: 15rem"
 			max="100"
+			[value]="progress"
 		></progress>
+		<ng-template #indeterminate>
+			<progress
+				class="progress is-small is-primary"
+				style="width: 15rem"
+				max="100"
+			></progress>
+		</ng-template>
 	</div>
 </div>

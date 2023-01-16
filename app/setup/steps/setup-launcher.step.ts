@@ -23,8 +23,8 @@ export const setupLauncherStep: SetupStepConfig = {
 			config = '';
 		}
 
+		// Set the built-in Java path
 		const javaPath = path.join(JDK_DIR, 'bin', 'javaw.exe');
-
 		config = cfgAddOrReplace(
 			config,
 			'JavaPath',
@@ -32,34 +32,40 @@ export const setupLauncherStep: SetupStepConfig = {
 			true,
 		);
 
+		// Setup defaults
 		config = cfgAddOrReplace(config, 'ApplicationTheme', 'dark');
 		config = cfgAddOrReplace(config, 'Language', 'en_US');
 		config = cfgAddOrReplace(config, 'Analytics', 'true');
 		config = cfgAddOrReplace(config, 'AnalyticsSeen', '2');
 		config = cfgAddOrReplace(config, 'ShownNotifications', '');
 		config = cfgAddOrReplace(config, 'LastHostname', os.hostname());
-
-		let maxMemory = os.totalmem() / 2;
-		if (maxMemory > MAX_MAX_MEMORY) {
-			maxMemory = MAX_MAX_MEMORY;
-		}
-
-		let minMemory = maxMemory - 2048 * 1024 * 1024;
-		if (minMemory < MIN_MIN_MEMORY) {
-			minMemory = MIN_MIN_MEMORY;
-		}
-
-		config = cfgAddOrReplace(
-			config,
-			'MaxMemAlloc',
-			(maxMemory / 1024 / 1024).toFixed(0),
-		);
-		config = cfgAddOrReplace(
-			config,
-			'MinMemAlloc',
-			(minMemory / 1024 / 1024).toFixed(0),
-		);
+		config = setupRecommendedMemory(config);
 
 		await fs.promises.writeFile(configPath, config);
 	},
+};
+
+const setupRecommendedMemory = (config: string): string => {
+	let maxMemory = os.totalmem() / 2;
+	if (maxMemory > MAX_MAX_MEMORY) {
+		maxMemory = MAX_MAX_MEMORY;
+	}
+
+	let minMemory = maxMemory - 2048 * 1024 * 1024;
+	if (minMemory < MIN_MIN_MEMORY) {
+		minMemory = MIN_MIN_MEMORY;
+	}
+
+	config = cfgAddOrReplace(
+		config,
+		'MaxMemAlloc',
+		(maxMemory / 1024 / 1024).toFixed(0),
+	);
+	config = cfgAddOrReplace(
+		config,
+		'MinMemAlloc',
+		(minMemory / 1024 / 1024).toFixed(0),
+	);
+
+	return config;
 };

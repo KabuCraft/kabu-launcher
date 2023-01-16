@@ -3,7 +3,7 @@ import path from 'path';
 
 import { SetupStepConfig } from '../types';
 import { DATA_DIR, LAUNCHER_DIR, LAUNCHER_URL } from '../const';
-import { downloadFile, extract } from '../setup.util';
+import { downloadFile, extract } from '../../util';
 
 export const downloadLauncherStep: SetupStepConfig = {
 	run: async (event) => {
@@ -18,10 +18,6 @@ export const downloadLauncherStep: SetupStepConfig = {
 		const fileName = 'mmc.zip';
 		const zipDir = path.join(DATA_DIR, fileName);
 		await downloadFile(LAUNCHER_URL, zipDir, event);
-    await extract(zipDir, LAUNCHER_DIR, true, true);
-
-    const contents = await fs.promises.readdir(LAUNCHER_DIR);
-    console.log(contents);
-    // await fsExtra.move(TEMP_MODPACK_PATH, instanceTarget, { overwrite: true });
+		await extract(zipDir, LAUNCHER_DIR, true, true);
 	},
 };

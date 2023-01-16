@@ -1,6 +1,8 @@
 import path from 'path';
+import { app } from 'electron';
 
-export const DATA_DIR = 'data';
+const basePath = app ? app.getPath('userData') + path.sep : '';
+export const DATA_DIR = basePath + 'data';
 
 export const JDK_DIR = path.join(DATA_DIR, 'jdk');
 
@@ -10,7 +12,10 @@ export const LAUNCHER_URL =
 	'https://files.multimc.org/downloads/mmc-stable-windows.zip';
 
 export const LAUNCHER_DIR = path.join(DATA_DIR, 'launcher');
-export const LAUNCHER_EXECUTABLE = path.join(LAUNCHER_DIR, 'MultiMC.exe');
+export const LAUNCHER_EXECUTABLE = path.join(
+	LAUNCHER_DIR,
+	LAUNCHER_DIST + '.exe',
+);
 
 export const INSTANCES_DIR = path.join(LAUNCHER_DIR, 'instances');
 export const INSTANCE_NAME = 'KabuPack';

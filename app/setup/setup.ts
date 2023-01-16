@@ -1,6 +1,7 @@
-import { IpcMainEvent, ipcMain } from 'electron';
+import { IpcMainEvent } from 'electron';
+import { error, log } from 'electron-log';
 
-import { setupSteps } from '../../src/shared';
+import { setupSteps } from '../shared';
 import { setupConfig } from './setup.config';
 
 export const runSetup = async (event?: IpcMainEvent) => {
@@ -11,17 +12,21 @@ export const runSetup = async (event?: IpcMainEvent) => {
 		if (event) {
 			event.sender.send('setup-progress', { index: i });
 		}
-		console.log(`Running step ${i + 1} - ${step.key}`);
+		log(`Running step ${i + 1} - ${step.key}`);
 
 		try {
 			await config.run(event);
 		} catch (e) {
-			console.error(e);
+			error(e);
 
 			if (event) {
 				event.sender.send('setup-progress', { error: e });
 			}
-			break;
+			return;
 		}
+
+		log(`Finished step ${i + 1}`);
 	}
+
+	event.sender.send('setup-progress', { complete: true });
 };

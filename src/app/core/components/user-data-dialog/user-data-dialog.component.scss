@@ -1,0 +1,9 @@
+:host .modal-card {
+  max-width: 400px;
+}
+
+$previewSize: 80px;
+.avatar-preview {
+  width: $previewSize;
+  height: $previewSize;
+}

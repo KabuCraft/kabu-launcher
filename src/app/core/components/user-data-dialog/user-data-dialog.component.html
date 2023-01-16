@@ -1,0 +1,67 @@
+<div class="modal is-active">
+	<div class="modal-background"></div>
+	<div class="modal-card">
+		<header class="modal-card-head">
+			<p class="modal-card-title">Conta</p>
+		</header>
+		<form [formGroup]="userDataForm" (ngSubmit)="submit()">
+			<section class="modal-card-body">
+				<div class="is-flex is-align-items-center" style="gap: 20px">
+					<div class="is-flex-grow-1 field is-vertical">
+						<label class="label" for="nickname">Nickname</label>
+						<div class="field-body">
+							<div class="field">
+								<p class="control">
+									<input
+										#nicknameInput
+										id="nickname"
+										class="input"
+										type="text"
+										placeholder="O teu nickname"
+										formControlName="nickname"
+										[ngClass]="{
+											'is-danger': nickname.touched && nickname.invalid
+										}"
+										(keyup)="onChange()"
+										(keyup.enter)="submit()"
+									/>
+								</p>
+							</div>
+						</div>
+					</div>
+					<div
+						class="avatar-preview box is-flex is-align-items-center is-justify-content-center is-paddingless"
+					>
+						<progress
+							*ngIf="loadingAvatar"
+							class="progress is-primary is-small"
+							style="margin: 10px"
+						></progress>
+						<img
+							*ngIf="
+								!loadingAvatar &&
+								avatarURL &&
+								(!nickname.value || !nickname.touched || nickname.valid)
+							"
+							[src]="avatarURL"
+							[alt]="nickname.value"
+							class="w100 box is-paddingless"
+						/>
+					</div>
+				</div>
+			</section>
+			<footer class="modal-card-foot is-justify-content-flex-end">
+				<button
+					class="button"
+					[ngClass]="{
+						'is-success': userDataForm.valid
+					}"
+					[disabled]="userDataForm.invalid"
+					type="submit"
+				>
+					Gravar
+				</button>
+			</footer>
+		</form>
+	</div>
+</div>
