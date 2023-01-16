@@ -1,3 +1,5 @@
+import { IpcMainEvent } from 'electron';
+
 export interface SetupStepConfig {
-	run: () => void | Promise<void>;
+	run: (event?: IpcMainEvent) => void | Promise<void>;
 }

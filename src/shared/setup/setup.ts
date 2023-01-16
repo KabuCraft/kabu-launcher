@@ -10,7 +10,11 @@ export const setupSteps: SetupStep[] = [
 	},
 	{
 		key: 'download-launcher',
-		label: 'Downloading MultiMC',
+		label: 'Downloading launcher',
+	},
+	{
+		key: 'setup-launcher',
+		label: 'Setting up launcher',
 	},
 	{
 		key: 'download-modpack',

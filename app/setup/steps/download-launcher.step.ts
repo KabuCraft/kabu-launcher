@@ -1,32 +1,27 @@
 import fs from 'fs';
-import * as getFile from 'async-get-file';
 import path from 'path';
-import * as decompress from 'decompress';
 
 import { SetupStepConfig } from '../types';
-import { DATA_DIR, LAUNCHER_DIR } from '../const';
+import { DATA_DIR, LAUNCHER_DIR, LAUNCHER_URL } from '../const';
+import { downloadFile, extract } from '../setup.util';
 
 export const downloadLauncherStep: SetupStepConfig = {
-  run: async () => {
-      if (fs.existsSync(LAUNCHER_DIR)) {
-        return;
-      }
+	run: async (event) => {
+		if (fs.existsSync(LAUNCHER_DIR)) {
+			return;
+		}
 
-			if (!fs.existsSync(DATA_DIR)) {
-				await fs.promises.mkdir(DATA_DIR);
-			}
+		if (!fs.existsSync(DATA_DIR)) {
+			await fs.promises.mkdir(DATA_DIR);
+		}
 
-			const fileName = 'mmc.zip';
-			await getFile(
-				'https://files.multimc.org/downloads/mmc-stable-windows.zip',
-				{
-					directory: DATA_DIR,
-					filename: fileName,
-				},
-			);
+		const fileName = 'mmc.zip';
+		const zipDir = path.join(DATA_DIR, fileName);
+		await downloadFile(LAUNCHER_URL, zipDir, event);
+    await extract(zipDir, LAUNCHER_DIR, true, true);
 
-			const zipDir = path.join(DATA_DIR, fileName);
-			await decompress(zipDir, DATA_DIR);
-			await fs.promises.rm(zipDir);
-  }
-}
+    const contents = await fs.promises.readdir(LAUNCHER_DIR);
+    console.log(contents);
+    // await fsExtra.move(TEMP_MODPACK_PATH, instanceTarget, { overwrite: true });
+	},
+};

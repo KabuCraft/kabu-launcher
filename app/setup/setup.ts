@@ -1,32 +1,27 @@
-import { ipcMain } from 'electron';
+import { IpcMainEvent, ipcMain } from 'electron';
 
-import { SetupStep, setupSteps } from '../../src/shared';
-import {
-	downloadJDKStep,
-	downloadLauncherStep,
-	downloadModpackStep,
-} from './steps';
-import { SetupStepConfig } from './types';
+import { setupSteps } from '../../src/shared';
+import { setupConfig } from './setup.config';
 
-const setupActions: { [key in SetupStep['key']]: SetupStepConfig } = {
-	'download-jdk': downloadJDKStep,
-	'download-launcher': downloadLauncherStep,
-	'download-modpack': downloadModpackStep,
-};
-
-ipcMain.on('begin-setup', async (event) => {
+export const runSetup = async (event?: IpcMainEvent) => {
 	for (let i = 0; i < setupSteps.length; i++) {
-		event.sender.send('setup-progress', { index: i });
-
 		const step = setupSteps[i];
-		const config = setupActions[step.key];
+		const config = setupConfig[step.key];
+
+		if (event) {
+			event.sender.send('setup-progress', { index: i });
+		}
+		console.log(`Running step ${i + 1} - ${step.key}`);
 
 		try {
-			await config.run();
+			await config.run(event);
 		} catch (e) {
 			console.error(e);
-			event.sender.send('setup-progress', { error: e });
+
+			if (event) {
+				event.sender.send('setup-progress', { error: e });
+			}
 			break;
 		}
 	}
-});
+};
