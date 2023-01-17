@@ -4,8 +4,10 @@
 
 $previewSize: 80px;
 .avatar-preview {
-	max-width: $previewSize;
-	max-height: $previewSize;
+	width: $previewSize;
+	height: $previewSize;
+	min-width: $previewSize;
+	min-height: $previewSize;
 
 	img {
 		object-fit: contain;

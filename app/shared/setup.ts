@@ -1,8 +1,14 @@
+/**
+ * A step of the setup process.
+ */
 export interface SetupStep {
 	key: string;
 	label: string;
 }
 
+/**
+ * Setup steps data.
+ */
 export const setupSteps: SetupStep[] = [
 	{
 		key: 'download-jdk',
@@ -26,7 +32,23 @@ export const setupSteps: SetupStep[] = [
 	},
 ];
 
-export interface SetupUpdate {
+interface SetupErrorUpdate {
 	key: string;
-	error?: string;
+	error: any;
 }
+
+interface SetupProgressUpdate {
+	key: string;
+}
+
+interface SetupCompleteUpdate {
+	complete: boolean;
+}
+
+/**
+ * A setup update sent from the backend to the frontend.
+ */
+export type SetupUpdate =
+	| SetupErrorUpdate
+	| SetupProgressUpdate
+	| SetupCompleteUpdate;

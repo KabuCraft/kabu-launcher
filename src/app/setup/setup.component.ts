@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 
-import { SetupStep, setupSteps } from '../../../app/shared';
+import { SetupStep, setupSteps, SetupUpdate } from '../../../app/shared';
 import { ElectronService } from '../core/services';
 import { BaseComponent } from '../shared';
 
@@ -61,14 +61,14 @@ export class SetupComponent extends BaseComponent implements OnInit {
 		this.electron
 			.on('setup-progress')
 			.pipe(takeUntil(this.ngDestroyed$))
-			.subscribe(({ index, error, complete }) => {
-				if (error) {
-					alert(error.message);
+			.subscribe((update: SetupUpdate) => {
+				if ('error' in update && update.error) {
+					alert(update.error.message);
 					return;
 				}
 
 				// Once the setup is complete, launch the game
-				if (complete) {
+				if ('complete' in update && update.complete) {
 					this.router.navigate(['/game']);
 					return;
 				}
@@ -77,19 +77,22 @@ export class SetupComponent extends BaseComponent implements OnInit {
 				this.progress = undefined;
 
 				// Update the current step
-				this.updateStep(index);
+				if ('key' in update) {
+					this.updateStep(update.key);
+				}
 			});
 
 		this.electron.send('begin-setup');
 	}
 
 	/**
-	 * Update the current step by index.
+	 * Update the current step by its key.
 	 *
-	 * @param index
+	 * @param key
 	 * @private
 	 */
-	private updateStep(index: number) {
+	private updateStep(key: string) {
+		const index = this.steps.findIndex((step) => step.key === key);
 		this.currentStepIndex = index;
 		this.currentStep = setupSteps[index];
 		this.cdr.detectChanges();

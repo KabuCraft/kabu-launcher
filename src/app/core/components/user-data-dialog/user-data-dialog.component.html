@@ -38,11 +38,7 @@
 							style="margin: 10px"
 						></progress>
 						<img
-							*ngIf="
-								!loadingAvatar &&
-								avatarURL &&
-								(!nickname.value || !nickname.touched || nickname.valid)
-							"
+							*ngIf="!loadingAvatar && avatarURL"
 							[src]="avatarURL"
 							[alt]="nickname.value"
 							class="w100 box is-paddingless"

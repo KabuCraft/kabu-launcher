@@ -22,6 +22,10 @@ const VERSION_FILE_PATH = path.join(DATA_DIR, VERSION_FILE);
 const TEMP_MODPACK_PATH = path.join(DATA_DIR, 'temp_modpack');
 const TEMP_MODPACK_FILE_NAME = 'temp_modpack.zip';
 
+/**
+ * This step downloads the modpack instance and sets it up.
+ * It also checks for updates and updates the current instance.
+ */
 export const downloadModpackStep: SetupStepConfig = {
 	run: async (event) => {
 		// Compare current version with remote version

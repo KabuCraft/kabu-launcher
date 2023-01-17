@@ -1,8 +1,17 @@
 import { ipcMain, IpcMainEvent } from 'electron';
 import { error, log } from 'electron-log';
 
-import { setupSteps } from '../shared';
+import { setupSteps, SetupUpdate } from '../shared';
 import { setupConfig } from './setup.config';
+
+/**
+ * Sends an update to the frontend.
+ *
+ * @param update
+ * @param event
+ */
+const sendUpdate = (update: SetupUpdate, event?: IpcMainEvent) =>
+	event?.sender?.send?.('setup-progress', update);
 
 /**
  * Starts the game setup.
@@ -14,14 +23,17 @@ export const runSetup = async (event?: IpcMainEvent) => {
 		const config = setupConfig[step.key];
 
 		// Notify the sender of the current step
-		event?.sender?.send?.('setup-progress', { index: i });
+		sendUpdate({ key: step.key }, event);
 		log(`Running step ${i + 1} - ${step.key}`);
 
 		try {
 			await config.run(event);
 		} catch (e) {
 			error(e);
-			event?.sender?.send?.('setup-progress', { error: e });
+			sendUpdate({
+				key: step.key,
+				error: e,
+			});
 			return;
 		}
 
@@ -29,7 +41,7 @@ export const runSetup = async (event?: IpcMainEvent) => {
 	}
 
 	// Notify the sender that the setup is complete
-	event.sender.send('setup-progress', { complete: true });
+	sendUpdate({ complete: true }, event);
 };
 
 ipcMain?.on('begin-setup', (event) => runSetup(event));
