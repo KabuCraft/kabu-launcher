@@ -3,7 +3,6 @@
 	"directories": {
 		"output": "release/"
 	},
-	"artifactName": "KabuLauncher",
 	"files": [
 		"**/*",
 		"!**/*.ts",
@@ -17,17 +16,20 @@
 	],
 	"win": {
 		"icon": "dist/assets/icons",
-		"target": ["portable"]
+		"target": ["portable"],
+		"artifactName": "KabuLauncher.exe"
 	},
 	"portable": {
 		"splashImage": "dist/assets/icons/electron.bmp"
 	},
 	"mac": {
 		"icon": "dist/assets/icons",
-		"target": ["dmg"]
+		"target": ["dmg"],
+		"artifactName": "KabuLauncher.dmg"
 	},
 	"linux": {
 		"icon": "dist/assets/icons",
-		"target": ["AppImage"]
+		"target": ["AppImage"],
+		"artifactName": "KabuLauncher.AppImage"
 	}
 }
