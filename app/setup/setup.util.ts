@@ -1,3 +1,11 @@
+/**
+ * Adds or replaces a value in a .cfg format string.
+ *
+ * @param config
+ * @param key
+ * @param value
+ * @param force
+ */
 export const cfgAddOrReplace = (
 	config: string,
 	key: string,
@@ -17,5 +25,11 @@ export const cfgAddOrReplace = (
 	}
 };
 
+/**
+ * Removes a key from a .cfg format string.
+ *
+ * @param config
+ * @param key
+ */
 export const cfgRemove = (config: string, key: string) =>
 	config.replace(new RegExp(`^${key}=.*$`, 'gm'), '');

@@ -17,6 +17,11 @@ export class ElectronService {
 		return !!(window && window.process && window.process.type);
 	}
 
+	/**
+	 * Creates a listener for a channel.
+	 *
+	 * @param channel
+	 */
 	on<T = any>(channel: string): Observable<T> {
 		const subject = new Subject<T>();
 		const handler = (_event, data) => subject.next(data);
@@ -26,6 +31,12 @@ export class ElectronService {
 		);
 	}
 
+	/**
+	 * Sends a message to the backend.
+	 *
+	 * @param channel
+	 * @param args
+	 */
 	send(channel: string, ...args: any[]) {
 		this.ipcRenderer.send(channel, ...args);
 	}

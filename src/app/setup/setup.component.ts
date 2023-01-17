@@ -12,14 +12,27 @@ import { BaseComponent } from '../shared';
 	styleUrls: ['./setup.component.scss'],
 })
 export class SetupComponent extends BaseComponent implements OnInit {
+	/**
+	 * The setup steps.
+	 */
 	readonly steps = setupSteps;
 
+	/**
+	 * Index of the current step.
+	 */
 	currentStepIndex = -1;
+
+	/**
+	 * The current step.
+	 */
 	currentStep: SetupStep = {
 		key: 'loading',
 		label: 'Loading',
 	};
 
+	/**
+	 * Progress of the current step.
+	 */
 	progress?: number = undefined;
 
 	constructor(
@@ -31,6 +44,7 @@ export class SetupComponent extends BaseComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		// Listen to download progress updates
 		this.electron
 			.on('download-progress')
 			.pipe(takeUntil(this.ngDestroyed$))
@@ -43,6 +57,7 @@ export class SetupComponent extends BaseComponent implements OnInit {
 				this.cdr.detectChanges();
 			});
 
+		// Listen to step changes
 		this.electron
 			.on('setup-progress')
 			.pipe(takeUntil(this.ngDestroyed$))
@@ -52,6 +67,7 @@ export class SetupComponent extends BaseComponent implements OnInit {
 					return;
 				}
 
+				// Once the setup is complete, launch the game
 				if (complete) {
 					this.router.navigate(['/game']);
 					return;
@@ -67,6 +83,12 @@ export class SetupComponent extends BaseComponent implements OnInit {
 		this.electron.send('begin-setup');
 	}
 
+	/**
+	 * Update the current step by index.
+	 *
+	 * @param index
+	 * @private
+	 */
 	private updateStep(index: number) {
 		this.currentStepIndex = index;
 		this.currentStep = setupSteps[index];

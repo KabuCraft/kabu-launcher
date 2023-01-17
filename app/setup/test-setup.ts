@@ -5,6 +5,9 @@ import { log } from 'electron-log';
 import { DATA_DIR, LAUNCHER_EXECUTABLE } from './const';
 import { runSetup } from './setup';
 
+/**
+ * Runs a test run of the setup without needing a frontend.
+ */
 const run = async () => {
 	if (fs.existsSync(DATA_DIR)) {
 		log('Deleting existing data folder');

@@ -18,6 +18,8 @@ import { UserDataEvents, UserDataResponse } from '../../../../../app/shared';
 const buildAvatarUrl = (nickname: string) =>
 	`https://mc-heads.net/avatar/${nickname}`;
 
+const DEFAULT_AVATAR_URL = buildAvatarUrl('X');
+
 @Component({
 	selector: 'app-user-data-dialog',
 	templateUrl: './user-data-dialog.component.html',
@@ -27,8 +29,14 @@ export class UserDataDialogComponent
 	extends BaseComponent
 	implements OnInit, AfterViewInit
 {
+	/**
+	 * Nickname input element.
+	 */
 	@ViewChild('nicknameInput') nicknameInput: ElementRef<HTMLInputElement>;
 
+	/**
+	 * User data form.
+	 */
 	userDataForm = new FormGroup({
 		nickname: new FormControl('', {
 			validators: [
@@ -40,8 +48,19 @@ export class UserDataDialogComponent
 		}),
 	});
 
-	avatarURL? = buildAvatarUrl('Steve');
+	/**
+	 * URL of the avatar to display.
+	 */
+	avatarURL? = DEFAULT_AVATAR_URL;
+
+	/**
+	 * Whether the avatar is loading.
+	 */
 	loadingAvatar = false;
+
+	/**
+	 * Subject to manage loading avatar URLs with debounce.
+	 */
 	updateAvatarURL$ = new Subject<void>();
 
 	constructor(
@@ -60,7 +79,7 @@ export class UserDataDialogComponent
 		this.updateAvatarURL$
 			.pipe(
 				tap(() => (this.loadingAvatar = true)),
-				debounceTime(2000),
+				debounceTime(1500),
 				tap(() => (this.loadingAvatar = false)),
 			)
 			.subscribe(() => {
@@ -96,7 +115,7 @@ export class UserDataDialogComponent
 				this.updateAvatarURL$.next();
 			}
 		} else {
-			this.avatarURL = undefined;
+			this.avatarURL = DEFAULT_AVATAR_URL;
 		}
 
 		this.cdr.detectChanges();

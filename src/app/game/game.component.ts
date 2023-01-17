@@ -9,6 +9,7 @@ import { ElectronService } from '../core/services';
 })
 export class GameComponent {
 	constructor(private electron: ElectronService) {
+		// Launch the game when the component is created (ngOnInit wasn't being called)
 		this.electron.send('launch-game', { instance: 'KabuPack' });
 	}
 }

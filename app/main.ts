@@ -3,7 +3,7 @@ import { catchErrors } from 'electron-log';
 import * as path from 'path';
 import * as fs from 'fs';
 
-import { runSetup } from './setup/setup';
+import './setup/setup';
 import './launch';
 
 const init = () => {
@@ -54,8 +54,6 @@ const init = () => {
 			// when you should delete the corresponding element.
 			win = null;
 		});
-
-		ipcMain.on('begin-setup', (event) => runSetup(event));
 
 		return win;
 	}

@@ -10,6 +10,9 @@ import {
 	userSetupStep,
 } from './steps';
 
+/**
+ * Config of each setup step.
+ */
 export const setupConfig: { [key in SetupStep['key']]: SetupStepConfig } = {
 	'download-jdk': downloadJDKStep,
 	'download-launcher': downloadLauncherStep,

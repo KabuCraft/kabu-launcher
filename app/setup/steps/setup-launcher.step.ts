@@ -11,9 +11,12 @@ const LAUNCHER_CONFIG_FILE_NAME = LAUNCHER_DIST.toLowerCase() + '.cfg';
 const MAX_MAX_MEMORY = 8192 * 1024 * 1024;
 const MIN_MIN_MEMORY = 1024 * 1024 * 1024;
 
+/**
+ * This step sets up the launcher by changing its configurations.
+ */
 export const setupLauncherStep: SetupStepConfig = {
 	run: async () => {
-		// Edit launcher config
+		// Load the config if it exists
 		const configPath = path.join(LAUNCHER_DIR, LAUNCHER_CONFIG_FILE_NAME);
 
 		let config: string;
@@ -41,16 +44,24 @@ export const setupLauncherStep: SetupStepConfig = {
 		config = cfgAddOrReplace(config, 'LastHostname', os.hostname());
 		config = setupRecommendedMemory(config);
 
+		// Create or update the config file
 		await fs.promises.writeFile(configPath, config);
 	},
 };
 
+/**
+ * Sets up the recommended memory values in the configuration.
+ *
+ * @param config
+ */
 const setupRecommendedMemory = (config: string): string => {
+	// Max memory is either half of the total system memory or MAX_MAX_MEMORY
 	let maxMemory = os.totalmem() / 2;
 	if (maxMemory > MAX_MAX_MEMORY) {
 		maxMemory = MAX_MAX_MEMORY;
 	}
 
+	// Min memory is the max memory subtracted by 2GB or MIN_MIN_MEMORY
 	let minMemory = maxMemory - 2048 * 1024 * 1024;
 	if (minMemory < MIN_MIN_MEMORY) {
 		minMemory = MIN_MIN_MEMORY;

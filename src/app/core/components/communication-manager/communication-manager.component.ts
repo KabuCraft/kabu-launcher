@@ -16,6 +16,9 @@ interface Dialog {
 const MAPPING: { [key: string]: any } = {};
 MAPPING[UserDataEvents.REQUEST_ID] = UserDataDialogComponent;
 
+/**
+ * Component to manage requests from the backend.
+ */
 @Component({
 	selector: 'app-communication-manager',
 	templateUrl: './communication-manager.component.html',
@@ -24,6 +27,9 @@ export class CommunicationManagerComponent
 	extends BaseComponent
 	implements OnInit
 {
+	/**
+	 * The dialogs being shown.
+	 */
 	dialogs: Dialog[] = [];
 
 	constructor(
@@ -36,35 +42,58 @@ export class CommunicationManagerComponent
 
 	ngOnInit() {
 		for (const [key, value] of Object.entries(MAPPING)) {
-			this.electron
-				.on(key)
-				.pipe(takeUntil(this.ngDestroyed$))
-				.subscribe(() => {
-					const id = +new Date();
-
-					const injector = Injector.create({
-						providers: [
-							{
-								provide: DIALOG_INJECTION_TOKEN,
-								useValue: this.baseDialogData(id),
-							},
-						],
-						parent: this.injector,
-					});
-					this.dialogs.push({
-						id,
-						component: value,
-						injector,
-					});
-					this.cdr.detectChanges();
-				});
+			this.listen(key, value);
 		}
 	}
 
+	/**
+	 * Track by function for dialogs.
+	 *
+	 * @param _index
+	 * @param dialog
+	 */
 	trackByDialog(_index: number, dialog: Dialog) {
 		return dialog.id;
 	}
 
+	/**
+	 * Registers the listener and handler to an event.
+	 *
+	 * @param channel
+	 * @param component
+	 * @private
+	 */
+	private listen(channel: string, component: any) {
+		this.electron
+			.on(channel)
+			.pipe(takeUntil(this.ngDestroyed$))
+			.subscribe(() => {
+				const id = +new Date();
+
+				const injector = Injector.create({
+					providers: [
+						{
+							provide: DIALOG_INJECTION_TOKEN,
+							useValue: this.baseDialogData(id),
+						},
+					],
+					parent: this.injector,
+				});
+				this.dialogs.push({
+					id,
+					component,
+					injector,
+				});
+				this.cdr.detectChanges();
+			});
+	}
+
+	/**
+	 * Builds dialog data.
+	 *
+	 * @param id
+	 * @private
+	 */
 	private baseDialogData(id: any): DialogData {
 		return {
 			close: () => {

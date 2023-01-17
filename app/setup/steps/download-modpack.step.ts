@@ -38,13 +38,14 @@ export const downloadModpackStep: SetupStepConfig = {
 
 		// Check the latest version
 		const { data } = await axios.get(`${BASE_URL}/${VERSION_FILE}`);
+		log('Remote version: ', data.latest);
 		if (data.latest === currentVersion) {
 			log('Up to date');
 			return;
 		}
 
 		// Download the latest version into a temporary file
-		log('Downloading modpack');
+		log('Downloading and extracting modpack');
 		const modpackURL = `${BASE_URL}/KabuPack-${data.latest}.zip`;
 		const zipTarget = path.dirname(TEMP_MODPACK_PATH);
 		const tempFilePath = path.join(zipTarget, TEMP_MODPACK_FILE_NAME);
@@ -65,6 +66,9 @@ export const downloadModpackStep: SetupStepConfig = {
 	},
 };
 
+/**
+ * Performs a first time setup of the modpack.
+ */
 const firstTimeSetup = async () => {
 	log('Performing first time setup');
 
@@ -73,7 +77,7 @@ const firstTimeSetup = async () => {
 	// If there is no current version, just move the instance
 	await fsExtra.move(TEMP_MODPACK_PATH, instanceTarget, { overwrite: true });
 
-	// Edit the instance config
+	// Read the instance config
 	const instanceConfigPath = path.join(
 		INSTANCES_DIR,
 		INSTANCE_NAME,
@@ -82,12 +86,21 @@ const firstTimeSetup = async () => {
 	let instanceConfig = (
 		await fs.promises.readFile(instanceConfigPath)
 	).toString();
+
+	// Edit the instance config by removing overridden keys
 	instanceConfig = cfgRemove(instanceConfig, 'Java\\w+');
 	instanceConfig = cfgRemove(instanceConfig, '\\w+MemAlloc');
+
+	// Update the instance name, since it's launched by name
 	instanceConfig = cfgAddOrReplace(instanceConfig, 'name', INSTANCE_NAME, true);
+
+	// Update the instance config
 	await fs.promises.writeFile(instanceConfigPath, instanceConfig);
 };
 
+/**
+ * Updates an existing instance.
+ */
 const updateInstance = async () => {
 	log('Updating current instance');
 
@@ -109,5 +122,6 @@ const updateInstance = async () => {
 		instanceConfigsPath,
 	);
 
+	// Remove the source instance folder
 	await fs.promises.rm(TEMP_MODPACK_PATH, { force: true, recursive: true });
 };
