@@ -27,7 +27,11 @@ export const setupLauncherStep: SetupStepConfig = {
 		}
 
 		// Set the built-in Java path
-		const javaPath = path.join(JDK_DIR, 'bin', 'javaw.exe');
+		let javaPath = path.join(JDK_DIR, 'bin', 'javaw');
+		if (process.platform === 'win32') {
+			javaPath += '.exe';
+		}
+
 		config = cfgAddOrReplace(
 			config,
 			'JavaPath',

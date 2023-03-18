@@ -9,9 +9,10 @@
 	"main": "main.js",
 	"private": true,
 	"dependencies": {
-		"adm-zip": "^0.5.10",
+		"adm-zip": "0.5.10",
 		"async-get-file": "^1.0.4",
 		"axios": "^1.2.2",
+		"decompress": "4.2.1",
 		"electron-log": "^4.4.8",
 		"fs-extra": "^11.1.0"
 	},

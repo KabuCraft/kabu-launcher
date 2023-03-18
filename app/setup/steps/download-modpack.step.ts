@@ -5,14 +5,7 @@ import axios from 'axios';
 import { log } from 'electron-log';
 
 import { SetupStepConfig } from '../types';
-import {
-	BASE_URL,
-	DATA_DIR,
-	INSTANCES_DIR,
-	INSTANCE_NAME,
-	LAUNCHER_DIR,
-	LAUNCHER_EXECUTABLE,
-} from '../const';
+import { BASE_URL, DATA_DIR, INSTANCES_DIR, INSTANCE_NAME } from '../const';
 import { cfgAddOrReplace, cfgRemove } from '../setup.util';
 import { downloadFile, extract } from '../../util';
 
@@ -54,7 +47,7 @@ export const downloadModpackStep: SetupStepConfig = {
 		const zipTarget = path.dirname(TEMP_MODPACK_PATH);
 		const tempFilePath = path.join(zipTarget, TEMP_MODPACK_FILE_NAME);
 		await downloadFile(modpackURL, tempFilePath, event);
-		await extract(tempFilePath, TEMP_MODPACK_PATH, false, true);
+		await extract(tempFilePath, TEMP_MODPACK_PATH, false);
 
 		if (currentVersion === undefined) {
 			await firstTimeSetup();

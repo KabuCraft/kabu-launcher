@@ -11,7 +11,7 @@ import { downloadFile, extract } from '../../util';
  */
 export let LAUNCHER_URL =
 	process.env['LAUNCHER_URL'] ||
-	'https://nightly.link/UltimMC/Launcher/workflows/main/develop/mmc-cracked-win32.zip';
+	'https://files.multimc.org/downloads/mmc-develop-win32.zip';
 if (process.platform === 'linux') {
 	LAUNCHER_URL = LAUNCHER_URL.replace('win32', 'lin64');
 	if (LAUNCHER_URL.includes('.multimc.')) {
