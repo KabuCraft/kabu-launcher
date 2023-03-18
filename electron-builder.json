@@ -15,13 +15,13 @@
 		}
 	],
 	"win": {
-		"icon": "dist/assets/icons",
+		"icon": "dist/assets/icons/favicon.ico",
 		"target": ["portable"],
 		"artifactName": "KabuLauncher.exe"
 	},
 	"portable": {
-		"splashImage": "dist/assets/icons/electron.bmp"
-	},
+		"splashImage": "dist/assets/icons/splash.bmp"
+  },
 	"mac": {
 		"icon": "dist/assets/icons",
 		"target": ["dmg"],
