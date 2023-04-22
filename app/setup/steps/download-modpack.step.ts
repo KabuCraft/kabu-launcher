@@ -15,6 +15,8 @@ const VERSION_FILE_PATH = path.join(DATA_DIR, VERSION_FILE);
 const TEMP_MODPACK_PATH = path.join(DATA_DIR, 'temp_modpack');
 const TEMP_MODPACK_FILE_NAME = 'temp_modpack.zip';
 
+const PACK_CONFIG_FILE = 'mmc-pack.json';
+
 /**
  * This step downloads the modpack instance and sets it up.
  * It also checks for updates and updates the current instance.
@@ -118,6 +120,14 @@ const updateInstance = async () => {
 		path.join(TEMP_MODPACK_PATH, '.minecraft', 'config'),
 		instanceConfigsPath,
 	);
+
+  // Replace instance config file
+  const instanceConfigPath = path.join(INSTANCES_DIR, INSTANCE_NAME, PACK_CONFIG_FILE);
+  await fs.promises.rm(instanceConfigPath, { force: true });
+  await fsExtra.move(
+    path.join(TEMP_MODPACK_PATH, PACK_CONFIG_FILE),
+    instanceConfigPath,
+  );
 
 	// Remove the source instance folder
 	await fs.promises.rm(TEMP_MODPACK_PATH, { force: true, recursive: true });
